@@ -1,12 +1,23 @@
 # CNKI Skills
 
-CNKI literature workflow skills for **Codex and Claude Code**: eight operation
-skills, a Claude agent and an installable Codex workflow entrypoint.
+CNKI literature workflow skills for **Codex, Claude Code and WorkBuddy**: eight
+operation skills, a Claude agent and an installable Codex workflow entrypoint.
 
-**Experimental release:** offline citation conversion is tested. Domestic CNKI
-search, pagination, details, file download and native export are not end-to-end
-verified. The development browser was redirected to the overseas site, where
-advanced search triggered a CAPTCHA. See [validation](docs/validation.md).
+**Defaults to the domestic CNKI site.** Every skill starts from
+`https://kns.cnki.net/kns8s/defaultresult/index` (verified working: renders the
+subject search and journal filters, honours an institutional login), falling back
+to `https://www.cnki.net/`. Overseas mirrors such as oversea.cnki.net and
+global.cnki.net are never the starting point — the homepage may redirect there
+silently depending on the network exit point. They are used only as a last-resort
+fallback, after telling the user why the domestic site failed. See
+[Browser adapters](docs/browser-adapters.md).
+
+**Experimental release:** offline citation conversion is tested. A domestic search
+and result-parsing run is now verified end to end (institutional login, subject
+search returning total/journal/dissertation counts, no CAPTCHA); pagination,
+details, file download and native export are still unverified. Earlier development
+runs were redirected to the overseas site, where advanced search triggered a
+CAPTCHA. See [validation](docs/validation.md).
 
 This is a UI-guided agent skill bundle, not a fixed-selector scraper or an official
 CNKI API. [中文](README.md) · [Browser adapters](docs/browser-adapters.md)
@@ -29,6 +40,18 @@ Default destinations: CODEX_HOME/skills (otherwise ~/.codex/skills), or
 ~/.claude/skills plus ~/.claude/agents. For project-local installation use
 --project /path/to/project; Codex uses .agents/skills. Existing targets cause an
 error before copying. No browser/MCP settings are changed.
+
+**WorkBuddy** installs to ~/.workbuddy/skills (installer target added in 1.1;
+with older copies, copy the directories manually):
+
+```sh
+python3 scripts/install.py --target workbuddy
+# or manually: for d in skills/*/; do cp -R "$d" ~/.workbuddy/skills/; done
+```
+
+WorkBuddy drives the logged-in browser through the `bsk` CLI from `browser-skill`:
+`bsk session start` → `bsk navigate <url> --session <id>` → `bsk snapshot` →
+interact → `bsk session stop <id>`.
 
 ## Modules
 

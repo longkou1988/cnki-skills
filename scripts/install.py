@@ -12,6 +12,8 @@ def install(target, project=None, dry_run=False):
     base = Path(project).expanduser().resolve() if project else None
     if target == "codex":
         dest = base / ".agents" if base else Path(os.environ.get("CODEX_HOME", str(Path.home() / ".codex")))
+    elif target == "workbuddy":
+        dest = (base if base else Path.home()) / ".workbuddy"
     else:
         dest = (base if base else Path.home()) / ".claude"
     operations = [(src, dest / "skills" / src.name) for src in sorted((ROOT / "skills").iterdir()) if src.is_dir()]
@@ -35,7 +37,7 @@ def install(target, project=None, dry_run=False):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--target", choices=("codex", "claude"), required=True)
+    parser.add_argument("--target", choices=("codex", "claude", "workbuddy"), required=True)
     parser.add_argument("--project", help="Project-local install; otherwise user-local")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()

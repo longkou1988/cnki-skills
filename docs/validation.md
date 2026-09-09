@@ -25,23 +25,34 @@ No Zotero/EndNote desktop import or LaTeX compilation was performed.
 
 ## Live attempts
 
-| Stage | Codex | Claude Code |
-|---|---|---|
-| Browser connector | Chrome CDP navigation/focus timeouts; in-app browser works | CLI present; Chrome DevTools MCP not configured |
-| Entry discovery | www.cnki.net redirected to overseas homepage | Not tested |
-| Chinese UI | Language switch to /chn/ verified | Not tested |
-| Advanced-search entry | Click led to “拖动下方拼图完成验证” | Not tested |
-| Query submission and journal filter | Blocked before submission | Not tested |
-| Publication-date sorting and pagination | Not tested | Not tested |
-| Result deduplication against live rows | Not tested | Not tested |
-| Complete author list and detail/full text | Not tested | Not tested |
-| Journal issue navigation | Not tested | Not tested |
-| Native single/batch citation export | Not tested | Not tested |
-| Actual authorized PDF/CAJ download | Not tested | Not tested |
+| Stage | Codex | Claude Code | WorkBuddy |
+|---|---|---|---|
+| Browser connector | Chrome CDP navigation/focus timeouts; in-app browser works | CLI present; Chrome DevTools MCP not configured | `bsk` CLI + browser extension, works |
+| Entry discovery | www.cnki.net redirected to overseas homepage | Not tested | kns.cnki.net domestic entry reached directly |
+| Chinese UI | Language switch to /chn/ verified | Not tested | Domestic Chinese UI, no switch needed |
+| Advanced-search entry | Click led to “拖动下方拼图完成验证” | Not tested | Not tested |
+| Query submission and journal filter | Blocked before submission | Not tested | 主题 search submitted; 学术期刊 filter applied |
+| Publication-date sorting and pagination | Not tested | Not tested | Not tested |
+| Result deduplication against live rows | Not tested | Not tested | Observed network-first/正式版 duplicate of one title |
+| Complete author list and detail/full text | Not tested | Not tested | Not tested |
+| Journal issue navigation | Not tested | Not tested | Not tested |
+| Native single/batch citation export | Not tested | Not tested | Not tested |
+| Actual authorized PDF/CAJ download | Not tested | Not tested | Not tested |
+
+**WorkBuddy run (2026-09-09, domestic site).** Opened
+https://kns.cnki.net/kns8s/defaultresult/index with the user's logged-in browser;
+an institutional login was recognised. Entered 主题: 生成式人工智能 高校教师 and
+submitted. The domestic result page returned 总库 1055 / 学术期刊 674 /
+学位论文 210 / 会议 48, rendered the 篇名/作者/刊名/发表时间/被引/下载/操作 table,
+and no CAPTCHA appeared. The first seven rows were parsed; one title appeared
+twice (online-first and formally indexed versions of the same paper), which
+confirms the deduplication rule. This verifies domestic search and result
+parsing only.
 
 No CAPTCHA was solved, access purchased, credentials captured or full text
-redistributed. The overseas entry observation does not verify domestic KNS.
-No live result count, paper list or CNKI citation fixture is claimed.
+redistributed. The earlier overseas entry observation does not verify domestic
+KNS; the domestic run above does verify search and parsing but not export or
+download. No CNKI citation fixture is claimed.
 
 ## Reproducible acceptance procedure
 
@@ -65,6 +76,7 @@ On an authorized accessible CNKI journal search page:
    evidence; do not publish private account details or session-bearing URLs.
 
 Public references consulted for workflow terminology:
-- [CNKI international Chinese homepage](https://oversea.cnki.net/chn/), directly observed.
+- [CNKI domestic search entry](https://kns.cnki.net/kns8s/defaultresult/index), directly observed (default entry for these skills).
+- [CNKI international Chinese homepage](https://oversea.cnki.net/chn/), observed earlier; fallback platform only.
 - [CNKI usage guide hosted by Quanzhou Normal University Library](https://lib.qztc.edu.cn/2022/0405/c4818a267143/page.htm),
   useful for export/navigation terminology, not evidence of current DOM.

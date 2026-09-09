@@ -1,11 +1,20 @@
 # CNKI Skills
 
-面向 **Codex 和 Claude Code** 的知网文献工作流技能包。对应 ScienceDirect
-技能包的 8 个操作模块，另附 Claude agent 和 Codex 可安装入口。
+面向 **Codex、Claude Code 和 WorkBuddy** 的知网文献工作流技能包。对应
+ScienceDirect 技能包的 8 个操作模块，另附 Claude agent 和 Codex 可安装入口。
 
-**状态：实验版。** 离线引用转换有自动化测试；中国知网国内站的检索、翻页、
-详情、下载和原生引用导出尚未完成端到端验证。开发时官网跳转国际版，
-进入高级检索遇到拼图验证。请见 [测试记录](docs/validation.md)。
+**默认访问中国知网国内站。** 检索统一从
+`https://kns.cnki.net/kns8s/defaultresult/index` 进入（已验证可用：渲染主题
+检索与学术期刊筛选，机构登录生效）；`https://www.cnki.net/` 作为备用入口。
+不以 oversea.cnki.net、global.cnki.net 等海外镜像作为起始地址 —— 官网会按
+网络出口静默跳转到国际版。仅当国内站确实无法访问或被限制时，才在明确告知
+用户原因后回退到海外站，并标注结果来自哪个平台。详见
+[浏览器配置](docs/browser-adapters.md)。
+
+**状态：实验版。** 离线引用转换有自动化测试；国内站的检索与结果解析已完成
+一次真实端到端验证（机构登录下的主题检索，返回总库/学术期刊/学位论文计数，
+无验证码），详情、下载和原生引用导出仍待验证。开发早期官网跳转国际版，
+在国际版进入高级检索遇到拼图验证。请见 [测试记录](docs/validation.md)。
 本包是由 AI 按实时页面执行的技能说明，不是固定选择器爬虫或知网官方 API。
 
 [English](README.en.md) · [浏览器配置](docs/browser-adapters.md) · [来源声明](NOTICE.md)
@@ -44,10 +53,22 @@ Claude 默认安装到 ~/.claude/skills，并安装 ~/.claude/agents/cnki-resear
 Codex 使用 .agents/skills，Claude 使用 .claude/skills 和 .claude/agents。
 刷新/重新打开会话后确认技能可见。不会更改 MCP、账号或浏览器设置。
 
+**WorkBuddy** 安装到 ~/.workbuddy/skills（安装器 1.1 起支持；旧版本可手动复制）：
+
+```sh
+python3 scripts/install.py --target workbuddy
+# 或手动：for d in skills/*/; do cp -R "$d" ~/.workbuddy/skills/; done
+```
+
+WorkBuddy 通过 `browser-skill` 提供的 `bsk` CLI 驱动已登录的真实浏览器：
+`bsk session start` → `bsk navigate <url> --session <id>` → `bsk snapshot` →
+交互 → `bsk session stop <id>`。
+
 ## 使用
 
 Codex 中显式引用 `$cnki-researcher` 或对应操作技能；Claude Code 中调用
-`/cnki-researcher`，也可请求使用 cnki-researcher agent。
+`/cnki-researcher`，也可请求使用 cnki-researcher agent；WorkBuddy 中直接点名
+技能使用，例如「使用 cnki-search 检索……」。
 
 > 使用 cnki-researcher，在知网期刊库查找 2023 年以来“生成式人工智能”与
 > “企业创新”的文献，按发表时间倒序列出前 20 篇，分析其中最相关的 5 篇，
