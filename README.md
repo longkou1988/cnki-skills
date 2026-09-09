@@ -103,3 +103,11 @@ python3 -m venv .venv
 ```
 
 MIT；独立实现，功能结构受 cookjohn/sd-skills 启发，详见来源声明。
+
+## 关注我
+
+<p align="center">
+  <img src="assets/wechat-channel-qrcode.png" alt="扫一扫二维码，关注我的视频号" width="280">
+  <br>
+  <sub>扫一扫二维码，关注我的视频号</sub>
+</p>

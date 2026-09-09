@@ -84,3 +84,11 @@ JSON, RIS and EndNote tagged journal records are supported. See the
 incomplete authors are rejected, duplicate conflicts fail, and missing optional
 fields are omitted. Output is labeled offline-converted rather than native.
 MIT. Independently authored; functional inspiration acknowledged in [NOTICE](NOTICE.md).
+
+## Follow me
+
+<p align="center">
+  <img src="assets/wechat-channel-qrcode.png" alt="Scan the QR code to follow my video channel" width="280">
+  <br>
+  <sub>Scan the QR code to follow my WeChat video channel</sub>
+</p>
