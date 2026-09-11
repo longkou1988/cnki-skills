@@ -1,15 +1,15 @@
 ---
 name: cnki-download
-description: Download CNKI papers through normal authorized PDF or CAJ links when the user requests downloads.
+description: Download CNKI papers as PDF by default through authorized native links; use CAJ only when explicitly requested or accepted.
 ---
 
 # CNKI download
 
-1. Verify the requested paper identity and the user's download request. Inspect available PDF/CAJ/整本下载 controls and access status.
-2. Use the observed native download control. Do not reconstruct file endpoints, replay cookies, use another institution's proxy or purchase access without explicit authority.
-3. If only CAJ is available, report the format. Do not rename a CAJ file to .pdf or install a viewer implicitly.
-4. Verify the actual file using the browser's documented download receipt or an authorized local directory: completed transfer, non-empty file, correct format and matching paper identity. An HTML login/error page saved as .pdf is failure.
-5. Batch only specifically requested records; verify selected identities/count, obey the displayed batch limit and collect per-item status.
+1. Verify the requested paper identity and the user's download request. Default to PDF unless the user explicitly requests another format. Carry this preference through retries and batch operations.
+2. Inspect the paper's observed native download controls, including any download menu. Prefer a control explicitly labeled PDF or PDF下载. A generic 下载/整本下载 button does not establish the format; inspect its options or the paper detail page before proceeding. Do not reconstruct file endpoints, change URL parameters to force PDF, replay cookies, use another institution's proxy or purchase access without explicit authority.
+3. If no authorized PDF option is available after inspecting those controls, mark the item “PDF unavailable” or “PDF access blocked” as appropriate and continue other requested items. Do not silently fall back to CAJ. Download CAJ only if the user explicitly requests or accepts it; prior acceptance within the same task remains valid. Do not rename CAJ to .pdf, install a converter/viewer or print HTML as a substitute PDF unless separately requested.
+4. Verify the actual file using the browser's documented download receipt or an authorized local directory: completed transfer, non-empty file and matching paper identity. For PDF, confirm PDF content using file-type inspection or a PDF reader/parser; extension alone is insufficient. CAJ or an HTML login/error page saved as .pdf is failure. Report an unexpected format and retain the PDF preference on retry; do not delete the unexpected file automatically.
+5. Batch only specifically requested records; verify selected identities/count and the chosen PDF format, obey the displayed batch limit and collect per-item status. If the batch control only offers CAJ or its format is unclear, use individual verified PDF controls instead. Report remaining unavailable items without substituting CAJ.
 6. Return confirmed local file links where available, plus blocked/failed items and reasons. If the runtime cannot inspect the saved file, say “download initiated, file not verified.”
 7. Do not upload full texts to GitHub, Zotero or another service unless separately requested. Zotero import is optional and requires available connector support; this package does not transfer authenticated browser cookies.
 

@@ -58,7 +58,7 @@ interact → `bsk session stop <id>`.
 cnki-search (keywords), cnki-advanced-search (fields/dates),
 cnki-parse-results (extraction/deduplication), cnki-navigate-pages (pages/sort),
 cnki-paper-detail (metadata/reading), cnki-journal-browse (journal/issues),
-cnki-download (authorized PDF/CAJ), cnki-export (citations),
+cnki-download (PDF by default; CAJ only when explicitly requested or accepted), cnki-export (citations),
 cnki-researcher (workflow coordinator).
 
 Example: “Use cnki-researcher to search Chinese journals for generative AI AND

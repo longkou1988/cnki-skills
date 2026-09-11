@@ -18,6 +18,9 @@ by the available tools. These are instructions, not automatic subagent spawning.
    better-known papers outside the list without clearly reporting the change.
 4. Use cnki-paper-detail. Full-text analysis requires retrieved readable full text;
    otherwise label abstract/preview analysis and identify missing evidence.
+   When downloads are requested, use cnki-download with PDF as the default.
+   Preserve an explicit user format choice; otherwise do not substitute CAJ
+   when PDF is unavailable. Continue accessible items and report the shortfall.
 5. Use cnki-export for the requested citation set. If “export the citations” is
    unspecified, export the listed set and a separate selected-subset file.
 6. Before delivery compare all titles/identifiers against extracted records,
