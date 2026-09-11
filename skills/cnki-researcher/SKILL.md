@@ -19,6 +19,9 @@ by the available tools. These are instructions, not automatic subagent spawning.
 4. Use cnki-paper-detail. Full-text analysis requires retrieved readable full text;
    otherwise label abstract/preview analysis and identify missing evidence.
    When downloads are requested, use cnki-download with PDF as the default.
+   Create the local Downloads/CNKI/YYYY-MM-DD folder first (user's local date;
+   respect a supplied destination), then save and verify files there. Reuse the
+   current session and follow cnki-download's bounded progress-based waiting.
    Preserve an explicit user format choice; otherwise do not substitute CAJ
    when PDF is unavailable. Continue accessible items and report the shortfall.
 5. Use cnki-export for the requested citation set. If “export the citations” is

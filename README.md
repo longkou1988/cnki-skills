@@ -29,7 +29,7 @@ ScienceDirect 技能包的 8 个操作模块，另附 Claude agent 和 Codex 可
 | cnki-navigate-pages | 翻页、每页条数、日期排序 |
 | cnki-paper-detail | 完整题录、摘要、可访问全文分析 |
 | cnki-journal-browse | 期刊导航及卷期浏览 |
-| cnki-download | 默认 PDF 下载与文件核验；CAJ 需明确指定或接受 |
+| cnki-download | 默认 PDF，先建 Downloads/CNKI/日期 文件夹再保存；有界等待与文件核验，CAJ 需明确指定或接受 |
 | cnki-export | 原生引用导出，或离线转成 BibTeX |
 | cnki-researcher | 统筹以上步骤的入口 |
 
