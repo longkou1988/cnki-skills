@@ -118,7 +118,13 @@ domestic 检索 page rendered 主题/学术期刊 controls and a result table, a
 institutional login was recognised, and a 主题 keyword search returned 总库 /
 学术期刊 / 学位论文 counts without a CAPTCHA. The domestic entry is therefore the
 verified default; the overseas platform is fallback only (see above).
-Domestic full-text download and export controls remain unverified. Treat domestic
-and international platforms separately. Never report an attempted click as a
-successful search/export/download. Keep publication date, online-first date and
-indexing date distinct. Missing fields stay missing.
+On 2026-09-11 a domestic run downloaded five 生成式人工智能 papers with the
+detail-page **PDF下载** control under an institutional login; each file was
+checked with the `%PDF-` header and `file` type report. The result-list 下载 link
+does not name a format — a run the same day took that link and received a `.caj`
+file — so resolve the format on the detail page, where CAJ下载 and PDF下载 are
+separate controls. Domestic PDF download is therefore verified; native citation
+export and batch download are not.
+Treat domestic and international platforms separately. Never report an attempted
+click as a successful search/export/download. Keep publication date, online-first
+date and indexing date distinct. Missing fields stay missing.

@@ -12,12 +12,16 @@ silently depending on the network exit point. They are used only as a last-resor
 fallback, after telling the user why the domestic site failed. See
 [Browser adapters](docs/browser-adapters.md).
 
-**Experimental release:** offline citation conversion is tested. A domestic search
-and result-parsing run is now verified end to end (institutional login, subject
-search returning total/journal/dissertation counts, no CAPTCHA); pagination,
-details, file download and native export are still unverified. Earlier development
-runs were redirected to the overseas site, where advanced search triggered a
-CAPTCHA. See [validation](docs/validation.md).
+**Experimental release:** offline citation conversion is tested. Domestic search,
+result parsing and PDF download are now verified end to end (2026-09-11: subject
+search under an institutional login, five PDFs taken from the detail-page
+PDF下载 control and checked with the `%PDF-` header and `file`); native citation
+export and batch download are still unverified. The 下载 link in the result list
+does not name a format and may deliver CAJ — confirm the format on the detail
+page. Detail pages can also open behind a puzzle CAPTCHA that needs the user.
+Earlier development runs were redirected to the overseas site, where advanced
+search triggered a CAPTCHA. See [validation](docs/validation.md) and
+[Browser adapters](docs/browser-adapters.md).
 
 This is a UI-guided agent skill bundle, not a fixed-selector scraper or an official
 CNKI API. [中文](README.md) · [Browser adapters](docs/browser-adapters.md)
@@ -52,6 +56,12 @@ python3 scripts/install.py --target workbuddy
 WorkBuddy drives the logged-in browser through the `bsk` CLI from `browser-skill`:
 `bsk session start` → `bsk navigate <url> --session <id>` → `bsk snapshot` →
 interact → `bsk session stop <id>`.
+
+If `bsk click` reports `DOM Error while querying`, suspect protocol drift between
+the bsk CLI/daemon and the browser extension: run `bsk update -y` and start a new
+session; if it still fails, extract the links the page already exposes read-only
+and `bsk navigate` to one of them. See
+[Browser adapters](docs/browser-adapters.md).
 
 ## Modules
 

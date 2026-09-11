@@ -11,10 +11,13 @@ ScienceDirect 技能包的 8 个操作模块，另附 Claude agent 和 Codex 可
 用户原因后回退到海外站，并标注结果来自哪个平台。详见
 [浏览器配置](docs/browser-adapters.md)。
 
-**状态：实验版。** 离线引用转换有自动化测试；国内站的检索与结果解析已完成
-一次真实端到端验证（机构登录下的主题检索，返回总库/学术期刊/学位论文计数，
-无验证码），详情、下载和原生引用导出仍待验证。开发早期官网跳转国际版，
-在国际版进入高级检索遇到拼图验证。请见 [测试记录](docs/validation.md)。
+**状态：实验版。** 离线引用转换有自动化测试；国内站的检索、结果解析与 PDF
+下载已完成真实端到端验证（2026-09-11 机构登录下按主题检索并用详情页 PDF下载
+取到 5 篇 PDF，逐篇 `%PDF-` 与 `file` 核验通过），原生引用导出与批量下载仍待
+验证。结果列表里的「下载」链接不标格式，实际可能给到 CAJ，格式要在详情页确认。
+开发早期官网跳转国际版，在国际版进入高级检索遇到拼图验证；国内站详情页也可能
+出现拼图验证，需人工完成。请见 [测试记录](docs/validation.md) 与
+[浏览器配置](docs/browser-adapters.md)。
 本包是由 AI 按实时页面执行的技能说明，不是固定选择器爬虫或知网官方 API。
 
 [English](README.en.md) · [浏览器配置](docs/browser-adapters.md) · [来源声明](NOTICE.md)
@@ -63,6 +66,10 @@ python3 scripts/install.py --target workbuddy
 WorkBuddy 通过 `browser-skill` 提供的 `bsk` CLI 驱动已登录的真实浏览器：
 `bsk session start` → `bsk navigate <url> --session <id>` → `bsk snapshot` →
 交互 → `bsk session stop <id>`。
+
+若 `bsk click` 报 `DOM Error while querying`，多为 bsk CLI/daemon 与浏览器扩展
+的协议版本漂移：先 `bsk update -y` 并重启会话；若仍失败，改为只读提取页面已
+给出的链接再 `bsk navigate`。详见 [浏览器配置](docs/browser-adapters.md)。
 
 ## 使用
 

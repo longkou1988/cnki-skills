@@ -38,6 +38,47 @@ Refs invalidate after navigation, so re-snapshot before every interaction.
 timeout. Login and CAPTCHA are human steps: call `bsk request-help` instead of
 retrying blindly.
 
+### Known bsk failure modes — observed 2026-09-11
+
+**`bsk click` fails with `DOM Error while querying` (-32000).** Symptom: clicking
+a result-row link reports
+`hint: confirm the tab is still in a loaded state and retry` plus
+`details: {"code":-32000,"message":"DOM Error while querying"}`. No new tab opens
+and no download starts; the page is unchanged.
+Check `bsk status` first: a `protocol version drift` line (for example
+`protocol ext 1.1 vs daemon 1.0`) means the CLI/daemon and the browser extension
+disagree. Run `bsk update -y` and restart the session. In this run the update
+moved the CLI and daemon to 0.2.1 / protocol 1.1 and cleared the warning, but
+result-row clicks still failed, so treat the upgrade as necessary and not
+sufficient.
+Working fallback — extract the links the page already exposes, then navigate to a
+returned href instead of clicking:
+
+```sh
+bsk evaluate "JSON.stringify(Array.from(document.querySelectorAll('a[href*=\"article/abstract\"]')).map(function(a){return a.innerText.trim()+' :: '+a.href}))" --session <id>
+bsk navigate "<href returned above>" --session <id>
+```
+
+Use this only for read-only extraction, and only with strings the page returned.
+Do not assemble detail URLs, `v=` parameters or download endpoints by hand.
+A fresh session also has no refs until the first `bsk snapshot`; commands issued
+before it fail with `ref @eN unknown for tab …`.
+
+**`bsk reload` loses the submitted search.** The domestic result page is produced
+from a POST, so reloading returns the empty 检索 entry and drops both the keyword
+and the 学术期刊 filter. Re-enter the keyword, submit, and re-apply the filter
+rather than assuming the manifest is still on screen.
+
+**Detail pages may open behind the puzzle CAPTCHA.** A detail page can render only
+文章目录 and recommendations while showing 拖动下方拼图完成验证, with no abstract
+and no download control. Call `bsk request-help` and let the user solve it, then
+re-snapshot; if the download controls are still missing, `bsk reload` once and
+re-snapshot again. Never automate or evade the puzzle.
+
+**The result-list 下载 link does not name a format.** It may deliver CAJ. The
+detail page exposes separate CAJ下载 and PDF下载 controls, so resolve the PDF
+default there, per cnki-download.
+
 ## Domestic entry (default) — observed 2026-09-09
 Navigating directly to https://kns.cnki.net/kns8s/defaultresult/index reached the
 domestic 检索 page (page title 检索-中国知网). Observed:

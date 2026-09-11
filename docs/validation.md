@@ -34,10 +34,10 @@ No Zotero/EndNote desktop import or LaTeX compilation was performed.
 | Query submission and journal filter | Blocked before submission | Not tested | 主题 search submitted; 学术期刊 filter applied |
 | Publication-date sorting and pagination | Not tested | Not tested | Not tested |
 | Result deduplication against live rows | Not tested | Not tested | Observed network-first/正式版 duplicate of one title |
-| Complete author list and detail/full text | Not tested | Not tested | Not tested |
+| Complete author list and detail/full text | Not tested | Not tested | Detail page opened; 文章目录 and metadata rendered |
 | Journal issue navigation | Not tested | Not tested | Not tested |
 | Native single/batch citation export | Not tested | Not tested | Not tested |
-| Actual authorized PDF/CAJ download | Not tested | Not tested | Not tested |
+| Actual authorized PDF/CAJ download | Not tested | Not tested | Verified 2026-09-11: 5 × PDF, file-checked |
 
 **WorkBuddy run (2026-09-09, domestic site).** Opened
 https://kns.cnki.net/kns8s/defaultresult/index with the user's logged-in browser;
@@ -53,6 +53,50 @@ No CAPTCHA was solved, access purchased, credentials captured or full text
 redistributed. The earlier overseas entry observation does not verify domestic
 KNS; the domestic run above does verify search and parsing but not export or
 download. No CNKI citation fixture is claimed.
+
+## 2026-09-11 run (domestic site, WorkBuddy): PDF download verified
+
+Environment: macOS, `bsk` 0.1.10 → 0.2.1, Chromium with an institutional login
+(广东商学院华商学院) already present.
+
+Query: 主题 = 生成式人工智能, 学术期刊 database, site default relevance sort.
+Result counts: 总库 26,100 (2.61万) / 学术期刊 17,111. First page held 20 rows.
+
+Five records were selected on title relevance and journal tier, keeping their
+original list numbers (3, 9, 12, 14, 17). Each was opened on its detail page and
+downloaded with the **PDF下载** control:
+
+| List no. | Format | Size | Pages | `file` result |
+|---|---|---|---|---|
+| 3 | PDF | 984,203 B | 18 | PDF document, version 1.6 |
+| 9 | PDF | 828,052 B | 9 | PDF document, version 1.6 |
+| 12 | PDF | 764,462 B | 8 | PDF document, version 1.6 |
+| 14 | PDF | 881,350 B | 7 | PDF document, version 1.4 |
+| 17 | PDF | 1,658,611 B | — | PDF document, version 1.6 |
+
+Every file was checked with the `%PDF-` header and the `file` type report; none
+was an HTML login/error page, zero bytes, or a renamed CAJ file. This verifies
+authorized domestic PDF download and file verification only. Native citation
+export and batch download remain unverified.
+
+Three failure modes were observed and are recorded in
+[浏览器接入](browser-adapters.md):
+
+1. `bsk click` on result-row links failed with `DOM Error while querying`
+   (-32000). Root cause was protocol drift between the bsk CLI/daemon (0.1.10,
+   protocol 1.0) and the browser extension (0.2.0, protocol 1.1). `bsk update -y`
+   aligned the protocol (0.2.1 / 1.1) but row clicks still failed, so the run
+   switched to read-only link extraction plus `bsk navigate`.
+2. The first detail page opened behind 拖动下方拼图完成验证. The puzzle was handed
+   to the user through `bsk request-help`; after control returned, a reload was
+   needed before the download controls appeared. The puzzle was never automated.
+3. `bsk reload` after a submitted search returned the empty entry page and lost
+   the query and the 学术期刊 filter, so the search had to be re-entered.
+
+A separate run the same day had downloaded one of these records from the
+result-list 下载 link and received a `.caj` file. The result-list link does not
+name a format; the detail page exposes separate CAJ下载 and PDF下载 controls.
+This is the observed reason the PDF default must be resolved on the detail page.
 
 ## Reproducible acceptance procedure
 
