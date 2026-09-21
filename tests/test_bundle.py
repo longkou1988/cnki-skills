@@ -105,7 +105,7 @@ class ConversionTests(unittest.TestCase):
 class PackagingTests(unittest.TestCase):
     def test_frontmatter(self):
         skills = list((ROOT / "skills").glob("*/SKILL.md"))
-        self.assertEqual(len(skills), 9)
+        self.assertEqual(len(skills), 12)
         for skill in skills:
             meta = yaml.safe_load(skill.read_text().split("---", 2)[1])
             self.assertEqual(meta["name"], skill.parent.name)
@@ -114,7 +114,7 @@ class PackagingTests(unittest.TestCase):
 
     def test_install_targets_and_collision(self):
         with tempfile.TemporaryDirectory() as tmp:
-            self.assertEqual(installer.install("codex", tmp, True), 9)
+            self.assertEqual(installer.install("codex", tmp, True), 12)
             self.assertFalse((Path(tmp) / ".agents").exists())
             installer.install("codex", tmp)
             self.assertTrue((Path(tmp) / ".agents/skills/cnki-export/scripts/convert.py").exists())

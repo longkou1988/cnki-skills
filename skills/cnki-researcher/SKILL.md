@@ -5,7 +5,7 @@ description: Coordinate a CNKI literature workflow from search and screening to 
 
 # CNKI research workflow
 
-Use the eight sibling cnki-* skills when installed; read each before its stage.
+Use the sibling cnki-* skills when installed; read each before its stage.
 If one is missing, report the missing module and perform only stages supported
 by the available tools. These are instructions, not automatic subagent spawning.
 
@@ -30,6 +30,22 @@ by the available tools. These are instructions, not automatic subagent spawning.
    ensure no duplicate filler entries, and verify exported counts and file paths.
 7. Return the search manifest, result list, reading analysis, .bib artifact and
    any limitations. Never claim a blocked stage completed.
+
+## Durable screening, comparison and resume
+
+When the user requests screening tables, empirical comparisons, or resumable work,
+use cnki-resume from task start and save each verified result immediately. Use
+cnki-screening for criterion-linked include/exclude/uncertain decisions, and
+cnki-evidence-table for per-field evidence with page/section locators. Follow their
+shared schema; use one task file through these stages. Existing local readable
+papers can be analyzed without downloading again. Missing sibling modules are
+reported, never implicitly installed.
+
+On continuation, read the existing queue before any web action. Reuse completed
+records and verified files; inspect running transfers before retry. Preserve the
+original query/criteria and selection scope. Export the workbook even if access
+blocks some records, while explicitly reporting unfinished work and abstract-only
+analysis. Do not claim structural evidence validation proves scholarly accuracy.
 
 ## Browser and access
 Use the user's available browser connector. Claude Code: Chrome DevTools MCP

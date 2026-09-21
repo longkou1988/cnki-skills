@@ -124,3 +124,24 @@ Public references consulted for workflow terminology:
 - [CNKI international Chinese homepage](https://oversea.cnki.net/chn/), observed earlier; fallback platform only.
 - [CNKI usage guide hosted by Quanzhou Normal University Library](https://lib.qztc.edu.cn/2022/0405/c4818a267143/page.htm),
   useful for export/navigation terminology, not evidence of current DOM.
+
+
+## 2026-09-21: screening, evidence tables and resume
+
+31 automated tests passed locally, including the 12 existing tests. New coverage:
+transaction rollback on conflicting imports, DOI enrichment without changing task
+identity, ambiguous duplicate retention, evidence/access validation, invalidating
+extraction after screening changes, idempotent screening replay, process restart,
+concurrent claims (one wins), active-transfer inspection, artifact format/hash and
+missing-file checks, required-full-text blockers, Excel/CSV formula safety,
+independent workbook parsing using openpyxl, invalid-output cleanup, CLI errors,
+and backed-up installation upgrades with unrelated-skill/symlink protection.
+
+The three new skills and updated coordinator passed skill-creator validation.
+`python3 scripts/demo_workflow.py --output <new-directory>` produced a five-sheet
+XLSX, five CSVs, an audit snapshot and resumable SQLite ledger from three explicitly
+synthetic records (included, excluded, uncertain). XLSX was read independently with
+openpyxl; frozen headers, evidence locators, unknown fields and string cell types
+were checked. No live CNKI search, article screening accuracy, PDF reading accuracy,
+Excel desktop rendering or native citation export is claimed by this test run.
+The runtime helper uses only the standard library; openpyxl is a test dependency.

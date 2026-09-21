@@ -1,7 +1,8 @@
 # CNKI Skills
 
 面向 **Codex、Claude Code 和 WorkBuddy** 的知网文献工作流技能包。对应
-ScienceDirect 技能包的 8 个操作模块，另附 Claude agent 和 Codex 可安装入口。
+ScienceDirect 技能包的 8 个操作模块，增加文献筛选、实证对照与续跑，
+共 12 个技能，另附 Claude agent 和 Codex 可安装入口。
 
 **默认访问中国知网国内站。** 检索统一从
 `https://kns.cnki.net/kns8s/defaultresult/index` 进入（已验证可用：渲染主题
@@ -34,6 +35,9 @@ ScienceDirect 技能包的 8 个操作模块，另附 Claude agent 和 Codex 可
 | cnki-journal-browse | 期刊导航及卷期浏览 |
 | cnki-download | 默认 PDF，先建 Downloads/CNKI/日期 文件夹再保存；有界等待与文件核验，CAJ 需明确指定或接受 |
 | cnki-export | 原生引用导出，或离线转成 BibTeX |
+| cnki-screening | 文献筛选表：纳入、排除、待判断及证据理由 |
+| cnki-evidence-table | 实证研究对照表：变量、样本、方法及逐字段原文证据 |
+| cnki-resume | 本地事务台账、任务续跑、文件校验、Excel/CSV输出 |
 | cnki-researcher | 统筹以上步骤的入口 |
 
 ## 安装
@@ -70,6 +74,47 @@ WorkBuddy 通过 `browser-skill` 提供的 `bsk` CLI 驱动已登录的真实浏
 若 `bsk click` 报 `DOM Error while querying`，多为 bsk CLI/daemon 与浏览器扩展
 的协议版本漂移：先 `bsk update -y` 并重启会话；若仍失败，改为只读提取页面已
 给出的链接再 `bsk navigate`。详见 [浏览器配置](docs/browser-adapters.md)。
+
+## 升级已有安装
+
+```sh
+git pull --ff-only
+python3 scripts/install.py --target codex --upgrade --dry-run
+python3 scripts/install.py --target codex --upgrade
+```
+
+`--upgrade` 会在目标配置目录的 `cnki-backups/时间戳/` 保存旧版本，再替换本包
+技能；其他技能不动。已有同名技能中的自定义内容保留在备份中，可比对后迁回。
+不带 `--upgrade` 仍拒绝覆盖。Claude/WorkBuddy 使用相应 `--target`。
+升级后重新打开会话以发现新技能。
+
+## 文献表格与任务续跑
+
+直接对 AI 说：
+
+> 使用 cnki-researcher，检索“数字化转型与企业创新”，对前20篇结果按中国企业、
+> 实证研究、创新产出三个条件生成文献筛选表。对其中能读到全文的5篇生成实证
+> 研究对照表，附变量测量、识别策略、机制检验及原文页码。保存任务以便续跑。
+
+中断后说：
+
+> 使用 cnki-resume，继续这个 task.sqlite 中尚未完成的工作，复用已验证的文件。
+
+输出一个 Excel 工作簿，含 **文献筛选表、实证研究对照表、原文证据、任务进度、
+检索与筛选规则** 五个工作表，附 CSV 和审计快照。只读到摘要的会明确标识；
+缺失字段保留“未提取/证据不足”；排除记录不删除。SQLite 台账保存逐篇进度，
+恢复时核验文件是否仍存在且内容未变。运行中的下载先检查，不直接重启。
+
+所有判断由 AI 根据实际读取的材料完成；离线程序验证字段与状态、生成文件，
+不会自行抓取知网，也不能代替原文证据核对。真实网站仍需要可用的授权浏览器。
+
+[字段与命令说明](skills/cnki-resume/references/schema.md)。可先运行合成演示：
+
+```sh
+python3 scripts/demo_workflow.py --output /tmp/cnki-demo
+```
+
+演示会生成三篇**合成**文献的筛选/实证工作簿和可续跑台账，不访问知网。
 
 ## 使用
 

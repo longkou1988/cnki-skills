@@ -102,3 +102,25 @@ MIT. Independently authored; functional inspiration acknowledged in [NOTICE](NOT
   <br>
   <sub>Scan the QR code to follow my WeChat video channel</sub>
 </p>
+
+## Screening tables, empirical comparisons and resume
+
+Three new skills extend the existing browser workflow: `cnki-screening`,
+`cnki-evidence-table`, and `cnki-resume`. A shared, transactional local SQLite
+ledger preserves per-paper progress and evidence. Export produces an XLSX workbook
+(screening, empirical comparison, evidence, progress, search criteria), UTF-8 CSVs
+and an audit snapshot. Python 3.9+ standard library only at runtime.
+
+Each extracted field requires a source quote and locator. Abstract/preview/full-text
+access is explicit; absent evidence is not filled in. Resuming checks saved file
+hashes and never automatically restarts a running transfer. The agent reads sources
+and makes judgments; the offline helper validates structure, not scholarly truth.
+
+Use `python3 scripts/demo_workflow.py --output /tmp/cnki-demo` for synthetic offline
+examples, or consult the [schema and commands](skills/cnki-resume/references/schema.md).
+
+Upgrade an existing install using `python3 scripts/install.py --target codex --upgrade`
+(optionally preview with `--dry-run`). Existing bundle items are backed up under the
+target config directory's `cnki-backups/` before replacement. Unrelated skills remain
+untouched; local customizations can be recovered from the backup. Restart the session
+to discover new skills. Substitute `claude` or `workbuddy` as appropriate.
