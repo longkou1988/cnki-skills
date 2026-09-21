@@ -48,6 +48,12 @@ blocks some records, while explicitly reporting unfinished work and abstract-onl
 analysis. Do not claim structural evidence validation proves scholarly accuracy.
 
 ## Browser and access
+
+Optional paid screening: use cnki-jev only when installed and explicitly enabled
+for this task with an authorized title/abstract upload scope and budget. Read its
+SKILL.md before use. Otherwise keep the baseline workflow. Jev proposals do not
+replace frozen criteria, source evidence, or the existing screening ledger.
+
 Use the user's available browser connector. Claude Code: Chrome DevTools MCP
 (list pages → select page → take snapshot → interact). Codex: use its available
 browser skill/tool and documented API. WorkBuddy: the `browser-skill` CLI (`bsk`)

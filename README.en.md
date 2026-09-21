@@ -1,7 +1,10 @@
 # CNKI Skills
 
-CNKI literature workflow skills for **Codex, Claude Code and WorkBuddy**: eight
-operation skills, a Claude agent and an installable Codex workflow entrypoint.
+CNKI literature workflow skills for **Codex, Claude Code and WorkBuddy**: 12 base
+skills for search, screening, evidence tables and resumable workflows, plus a Claude
+agent. The new **[cnki-jev optional extension](skills/cnki-jev/SKILL.md)** adds paid
+Jev-assisted screening while retaining source evidence and LLM/human review.
+It is separately installed and disabled by default; the base bundle needs no Jev.
 
 **Defaults to the domestic CNKI site.** Every skill starts from
 `https://kns.cnki.net/kns8s/defaultresult/index` (verified working: renders the
@@ -50,7 +53,7 @@ with older copies, copy the directories manually):
 
 ```sh
 python3 scripts/install.py --target workbuddy
-# or manually: for d in skills/*/; do cp -R "$d" ~/.workbuddy/skills/; done
+# For manual installation, choose directories; cnki-jev is optional.
 ```
 
 WorkBuddy drives the logged-in browser through the `bsk` CLI from `browser-skill`:
@@ -69,7 +72,49 @@ cnki-search (keywords), cnki-advanced-search (fields/dates),
 cnki-parse-results (extraction/deduplication), cnki-navigate-pages (pages/sort),
 cnki-paper-detail (metadata/reading), cnki-journal-browse (journal/issues),
 cnki-download (PDF by default; CAJ only when explicitly requested or accepted), cnki-export (citations),
-cnki-researcher (workflow coordinator).
+cnki-screening (auditable decisions), cnki-evidence-table (source-linked comparisons),
+cnki-resume (local ledger), cnki-researcher (workflow coordinator), and optionally
+cnki-jev (paid per-condition screening proposals).
+
+## Optional cnki-jev extension (paid API calls)
+
+```sh
+# Add only the extension to an existing base installation:
+python3 scripts/install.py --target codex --only-jev
+# New base + extension installation:
+python3 scripts/install.py --target codex --with-jev
+# Upgrade only the extension, with backup:
+python3 scripts/install.py --target codex --only-jev --upgrade
+```
+
+Replace `codex` with `claude` or `workbuddy` as needed. The default installer keeps
+the 12-skill base selection. A base-only upgrade leaves any installed extension
+untouched; `--with-jev --upgrade` updates both. Base workflows incur no Jev charges;
+existing LLM and CNKI access costs still apply.
+
+Installation does not enable calls, create accounts or purchase credits. Copy the
+[disabled example config](skills/cnki-jev/references/config.example.json) to your
+local research directory. Explicitly authorize title/abstract transmission, set
+task call limits, a local estimated budget and a verified provider input rate, then
+configure `TYPESAFE_API_KEY` through the environment. Never commit credentials or
+private research material.
+
+`off` keeps baseline screening. `shadow` makes paid calls for comparison with an
+independent baseline decision. `assist` makes paid per-condition proposals, with
+all criteria in one request per paper. Inclusion proposals need evidence checking;
+every exclusion and uncertain/complex case goes to LLM/human review. Final decisions
+use the existing `screen` command, with quotes and provenance; the adapter never
+writes final screening decisions. Missing abstracts return to baseline review.
+
+The local attempted-call cap is enforced transactionally. The USD budget is a
+conservative estimate, **not a provider-enforced spending cap**. Failed/interrupted
+calls retain their reservations; no automatic paid retries occur. Cached decisions
+avoid duplicate calls. API/budget failures route to baseline review or pause as
+configured. The default config makes no paid calls.
+
+See [configuration, execution and evidence handoff](skills/cnki-jev/references/usage.md).
+Offline synthetic tests verify behavior; live paid API acceptance and Chinese
+literature accuracy evaluation remain unverified. No accuracy/speed gain is promised.
 
 Example: “Use cnki-researcher to search Chinese journals for generative AI AND
 enterprise innovation since 2023; list the latest 20, analyze the most relevant

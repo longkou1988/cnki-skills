@@ -145,3 +145,28 @@ openpyxl; frozen headers, evidence locators, unknown fields and string cell type
 were checked. No live CNKI search, article screening accuracy, PDF reading accuracy,
 Excel desktop rendering or native citation export is claimed by this test run.
 The runtime helper uses only the standard library; openpyxl is a test dependency.
+
+## 2026-09-21: optional cnki-jev extension
+
+54 automated tests passed on Python 3.9, including all 31 previous tests. The 23
+new tests cover default-off and upload opt-in, allowlisted title/abstract payloads,
+read-only base ledger access, batched atomic conditions, cached and shadow routing,
+mandatory exclusion/uncertainty review, budget and call limits, missing credentials,
+failed-call reservations and explicit retries, interruption recovery, concurrent
+same-request deduplication and spending reservations, response schema rejection,
+pinned model checks, reported usage exceeding reservations, material cache
+invalidation, frozen task criteria/policy, missing abstracts, invalid configuration,
+CLI overwrite refusal, reviewed evidence/provenance in base exports, and optional
+installation/upgrade/backup behavior for Codex, Claude Code and WorkBuddy.
+
+The actual HTTP request construction and redirect refusal were checked with a
+mocked opener. Jev responses and papers are synthetic. No real API key, paid Jev
+call, external abstract upload, or live CNKI screening was used. Official API
+contract was consulted at https://docs.typesafe.ai/api on 2026-09-21; account
+connectivity and Chinese-domain accuracy remain unverified. Structured response
+validation is not evidence of scholarly accuracy. USD limits are local estimates
+at a user-configured rate, not provider-enforced invoice limits.
+
+The new cnki-jev skill and modified cnki-screening/cnki-researcher entrypoints
+passed the skill-creator quick validator. The default installer retains 12 base
+skills; only explicit --with-jev / --only-jev installs the optional 13th skill.

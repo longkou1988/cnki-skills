@@ -10,7 +10,9 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def install(target, project=None, dry_run=False, upgrade=False):
+def install(target, project=None, dry_run=False, upgrade=False, with_jev=False, only_jev=False):
+    if with_jev and only_jev:
+        raise ValueError('Choose --with-jev or --only-jev')
     base = Path(project).expanduser().resolve() if project else None
     if target == "codex":
         dest = base / ".agents" if base else Path(os.environ.get("CODEX_HOME", str(Path.home() / ".codex")))
@@ -18,8 +20,14 @@ def install(target, project=None, dry_run=False, upgrade=False):
         dest = (base if base else Path.home()) / ".workbuddy"
     else:
         dest = (base if base else Path.home()) / ".claude"
-    operations = [(src, dest / "skills" / src.name) for src in sorted((ROOT / "skills").iterdir()) if src.is_dir()]
-    if target == "claude":
+    sources = [src for src in sorted((ROOT / "skills").iterdir()) if src.is_dir()
+               and (src.name == "cnki-jev" if only_jev else (src.name != "cnki-jev" or with_jev))]
+    if only_jev:
+        for name in ("cnki-screening", "cnki-resume"):
+            if not (dest / "skills" / name / "SKILL.md").is_file():
+                raise ValueError('Install the base bundle first; missing ' + name)
+    operations = [(src, dest / "skills" / src.name) for src in sources]
+    if target == "claude" and not only_jev:
         operations.append((ROOT / "agents" / "cnki-researcher.md", dest / "agents" / "cnki-researcher.md"))
     for src, path in operations:
         if path.is_symlink():
@@ -66,8 +74,11 @@ if __name__ == "__main__":
     parser.add_argument("--project", help="Project-local install; otherwise user-local")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--upgrade", action="store_true", help="Replace installed bundle items with a dated backup; never follows target symlinks")
+    optional = parser.add_mutually_exclusive_group()
+    optional.add_argument("--with-jev", action="store_true", help="Also install the optional paid Jev adapter (disabled until configured)")
+    optional.add_argument("--only-jev", action="store_true", help="Install/upgrade only Jev; requires the base screening and resume skills")
     args = parser.parse_args()
     try:
-        install(args.target, args.project, args.dry_run, args.upgrade)
+        install(args.target, args.project, args.dry_run, args.upgrade, args.with_jev, args.only_jev)
     except (OSError, ValueError) as exc:
         parser.exit(1, str(exc) + "\n")

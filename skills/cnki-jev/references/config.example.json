@@ -1,0 +1,17 @@
+{
+  "enabled": false,
+  "mode": "off",
+  "allow_abstract_upload": false,
+  "criteria": "中国企业；实证研究；直接检验创新产出；不确定项保留待全文确认",
+  "questions": {
+    "population": "研究对象为中国企业",
+    "empirical": "采用实证研究方法",
+    "outcome": "直接检验创新产出"
+  },
+  "model": "jev-latest",
+  "min_probability": 0.95,
+  "max_calls": 0,
+  "budget_usd": 0,
+  "input_usd_per_million": 0,
+  "on_failure": "baseline"
+}

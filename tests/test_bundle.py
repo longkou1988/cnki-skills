@@ -105,7 +105,7 @@ class ConversionTests(unittest.TestCase):
 class PackagingTests(unittest.TestCase):
     def test_frontmatter(self):
         skills = list((ROOT / "skills").glob("*/SKILL.md"))
-        self.assertEqual(len(skills), 12)
+        self.assertEqual(len(skills), 13)
         for skill in skills:
             meta = yaml.safe_load(skill.read_text().split("---", 2)[1])
             self.assertEqual(meta["name"], skill.parent.name)

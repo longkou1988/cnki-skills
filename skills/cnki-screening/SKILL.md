@@ -32,3 +32,15 @@ this skill does not operate a new crawler. Existing authorized scope carries thr
 Changing a decision invalidates that paper's extraction and records the old/new
 values in the event history. Screening criteria are frozen per task: create a new
 task for changed criteria, so earlier decisions are never silently reused.
+
+## Optional Jev proposals
+
+If the user chooses paid Jev-assisted screening and cnki-jev is installed, read
+its SKILL.md. Installation alone never enables paid calls or abstract upload.
+The adapter reads the frozen task and returns per-condition proposals; it cannot
+finalize screening or supply source evidence. Shadow mode leaves baseline judgment
+independent. In assist mode verify the source evidence for inclusion proposals;
+route every exclusion, uncertain answer or conflict to the baseline LLM/human
+review. Save the final reason and exact quote via the same `screen` command,
+optionally with `decision_provenance` as described by cnki-jev. Missing/disabled
+extension uses the normal workflow with no Jev calls; report configured fallback.

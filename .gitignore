@@ -9,3 +9,7 @@ artifacts/
 *.sqlite
 *.sqlite-*
 research-output/
+.env
+.env.*
+jev-config.local.json
+jev-results/

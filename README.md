@@ -2,7 +2,10 @@
 
 面向 **Codex、Claude Code 和 WorkBuddy** 的知网文献工作流技能包。对应
 ScienceDirect 技能包的 8 个操作模块，增加文献筛选、实证对照与续跑，
-共 12 个技能，另附 Claude agent 和 Codex 可安装入口。
+基础包共 12 个技能，另附 Claude agent 和 Codex 可安装入口。
+新增 **[`cnki-jev` 可选扩展包](skills/cnki-jev/SKILL.md)**：用 Jev 按条件辅助初筛，
+复杂判断交回大模型或人工复核，保留现有原文证据链。扩展**单独选装、默认关闭、
+调用付费**；不安装也能完整使用基础包。
 
 **默认访问中国知网国内站。** 检索统一从
 `https://kns.cnki.net/kns8s/defaultresult/index` 进入（已验证可用：渲染主题
@@ -39,6 +42,12 @@ ScienceDirect 技能包的 8 个操作模块，增加文献筛选、实证对照
 | cnki-evidence-table | 实证研究对照表：变量、样本、方法及逐字段原文证据 |
 | cnki-resume | 本地事务台账、任务续跑、文件校验、Excel/CSV输出 |
 | cnki-researcher | 统筹以上步骤的入口 |
+| cnki-jev（可选） | Jev 分层初筛、试运行对比、缓存与预算控制；排除和疑难项复核 |
+
+| 安装选择 | 服务费用说明 |
+|---|---|
+| 基础包（12 个技能） | 不调用 Jev；原有 AI 模型和知网访问费用另计 |
+| 基础包＋cnki-jev | 用户自行配置 TypeSafe API Key，启用后按服务商规则计费 |
 
 ## 安装
 
@@ -64,7 +73,7 @@ Codex 使用 .agents/skills，Claude 使用 .claude/skills 和 .claude/agents。
 
 ```sh
 python3 scripts/install.py --target workbuddy
-# 或手动：for d in skills/*/; do cp -R "$d" ~/.workbuddy/skills/; done
+# 手动安装时，选择所需目录；cnki-jev 是可选项。
 ```
 
 WorkBuddy 通过 `browser-skill` 提供的 `bsk` CLI 驱动已登录的真实浏览器：
@@ -87,6 +96,47 @@ python3 scripts/install.py --target codex --upgrade
 技能；其他技能不动。已有同名技能中的自定义内容保留在备份中，可比对后迁回。
 不带 `--upgrade` 仍拒绝覆盖。Claude/WorkBuddy 使用相应 `--target`。
 升级后重新打开会话以发现新技能。
+
+## cnki-jev 可选扩展包（调用付费）
+
+已经安装基础包的用户，可单独添加扩展；首次安装也可一起选择：
+
+```sh
+# 已有基础包，只安装扩展，不覆盖基础技能：
+python3 scripts/install.py --target codex --only-jev
+# 首次安装基础包和扩展：
+python3 scripts/install.py --target codex --with-jev
+# 升级扩展，保留旧版备份：
+python3 scripts/install.py --target codex --only-jev --upgrade
+```
+
+Claude Code / WorkBuddy 替换 `--target` 即可。默认安装命令只安装 12 个基础技能；
+基础包升级不会修改已安装扩展。使用 `--with-jev --upgrade` 可以同时升级两者。
+
+**安装不等于启用。** 扩展不附带 API Key，不会创建账户、充值或自动付费调用。
+将[默认关闭的示例配置](skills/cnki-jev/references/config.example.json)复制到本地研究目录，
+按已授权范围设置题名/摘要发送许可、调用次数、估算预算与当前单价，再通过环境变量
+`TYPESAFE_API_KEY` 配置密钥。不要把密钥、真实摘要或研究台账提交到仓库。
+
+三种模式：`off` 使用原流程；`shadow` 付费运行并与独立的原流程判断对比；
+`assist` 付费生成辅助筛选建议。每篇文献的多个条件合并为一次请求，明确区分
+满足、不满足和证据不足。**第一版不自动写入最终筛选结论**：纳入建议核对原文证据，
+排除、不确定和复杂判断交回大模型或人工，最终结果仍由原有 `screen` 命令保存。
+无摘要时直接回到原流程，不将信息缺失视为不相关。
+
+调用次数上限严格按本地请求次数控制；美元预算是依据配置单价的保守估算，
+不是服务商账单的硬上限。失败和中断保留费用预留，不自动重试；缓存避免重复调用。
+服务不可用或预算耗尽时，按配置返回原流程或暂停。默认配置禁止任何付费请求。
+
+示例请求：
+
+> 使用 cnki-jev，对现有 task.sqlite 中的文献按原筛选标准做辅助初筛。
+> 使用我配置好的本地费用上限和题名/摘要发送许可；排除和疑难项交回复核，
+> 保留原文证据和最终判断记录。
+
+[完整配置、执行命令与证据回写说明](skills/cnki-jev/references/usage.md)。
+本版通过模拟响应验证程序行为，尚未完成真实 Jev 付费接口验收或中文文献准确率评测；
+不承诺接入后必然更快或更准。
 
 ## 文献表格与任务续跑
 
